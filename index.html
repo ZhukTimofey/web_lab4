@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+</head>
+<body>
+
+<div>
+Средний балл:
+<span id="result"></span>
+</div>
+<script>
+    let arr = [];
+var xhr = new XMLHttpRequest();
+
+xhr.open(
+'GET',
+'https://run.mocky.io/v3/565c3941-3583-4aa3-b81e-cdcdcd293b77',
+true)
+
+xhr.send()
+
+xhr.onreadystatechange = function () {
+if(xhr.readyState !== 4){
+return
+}
+console.log('end')
+if (xhr.status === 200){
+console.log( JSON.parse(xhr.responseText))
+arr = JSON.parse(xhr.responseText)
+Student.fill(arr);
+} else{
+console.log('err', xhr.responseText)
+}
+}
+
+const Student = (function() {
+
+
+const fill = (arr) => {
+let table = document.createElement('table');
+let tr = document.createElement('tr');
+table.appendChild(tr);
+tr.appendChild(document.createElement('th'));
+tr.appendChild(document.createElement('th'));
+tr.appendChild(document.createElement('th'));
+tr.appendChild(document.createElement('th'));
+table.rows[0].cells[0].innerHTML = 'Name';
+table.rows[0].cells[1].innerHTML = 'Age';
+table.rows[0].cells[2].innerHTML = 'Year';
+table.rows[0].cells[3].innerHTML = 'Mark';
+
+document.body.appendChild(table);
+let i = 1;
+
+arr.forEach(elem => {
+let tr = document.createElement('tr');
+table.appendChild(tr);
+tr.appendChild(document.createElement('td'));
+tr.appendChild(document.createElement('td'));
+tr.appendChild(document.createElement('td'));
+tr.appendChild(document.createElement('td'));
+table.rows[i].cells[0].textContent = elem.name;
+table.rows[i].cells[1].innerHTML = elem.age;
+table.rows[i].cells[2].innerHTML = elem.year;
+table.rows[i].cells[3].innerHTML = elem.mark;
+i++;
+});
+
+sumAverage();
+
+};
+
+function refreshData() {
+let table = document.querySelector('table');
+let i = 1;
+arr.forEach(elem => {
+let tr = document.createElement('tr');
+table.appendChild(tr);
+tr.appendChild(document.createElement('td'));
+tr.appendChild(document.createElement('td'));
+tr.appendChild(document.createElement('td'));
+tr.appendChild(document.createElement('td'));
+table.rows[i].cells[0].textContent = elem.name;
+table.rows[i].cells[1].innerHTML = elem.age;
+table.rows[i].cells[2].innerHTML = elem.year;
+table.rows[i].cells[3].innerHTML = elem.mark;
+i++;
+});
+
+sumAverage();
+}
+
+
+function sumAverage() {
+const el = document.querySelector('table');
+const resultEl = document.querySelector('#result');
+let sum = 0;
+Array.from(el.children).forEach((child, index) => {
+if (index !== 0) {
+sum += +child.lastElementChild.textContent;
+}
+});
+
+resultEl.textContent = +(sum / arr.length).toFixed(2);
+}
+
+
+
+
+return {
+fill,
+refreshData
+}
+})();
+function add(){
+arr.push({ name: document.getElementById('name').value,
+age: document.getElementById('age').value,
+year: document.getElementById('year').value,
+mark: document.getElementById('mark').value
+}, );
+Student.refreshData(arr);
+}
+
+function remove() {
+let k=document.getElementById('del').value;
+let table = document.querySelector('table');
+let m=k-1;
+table.children[k].remove();
+arr.splice(m, 1);
+Student.refreshData(arr);
+}
+</script>
+ <div>    
+    
+
+        <input id="name" type="text" name="name" placeholder="Name"><br>
+        <input id="age" type="text" name="age" placeholder="Age"><br>
+        <input id="year" type="text" name="year " placeholder="Year"><br>
+        <input id="mark" type="text" name="mark " placeholder="Mark"><br>
+        <button onclick="add()">Add</button><br>
+        <input id="del" type="text" name="del"><br>
+        <button onclick="remove()">Remove</button>
+
+
+
+    </div>
+    
+</body>
+</html>
